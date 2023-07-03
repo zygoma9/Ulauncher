@@ -22,7 +22,7 @@ def data_files_from_path(target_path, source_path):
     # Creates a list of valid entries for data_files weird custom format
     # Recurses over the real_path and adds it's content to package_path
     entries = []
-    for p in Path.cwd().glob(source_path + "/**/*"):
+    for p in Path.cwd().glob(f"{source_path}/**/*"):
         if p.is_file():
             relative_file = p.relative_to(Path(source_path).absolute())
             entries.append((f"{target_path}/{relative_file.parent}", [f"{source_path}/{relative_file}"]))
@@ -75,7 +75,7 @@ class build_wrapper(build_py, Command):
 
         build_py.run(self)
         print("Overwriting the namespace package with fixed values")
-        Path(self.build_lib + "/ulauncher/__init__.py").write_text(
+        Path(f"{self.build_lib}/ulauncher/__init__.py").write_text(
             "\n".join(
                 [
                     "import gi",

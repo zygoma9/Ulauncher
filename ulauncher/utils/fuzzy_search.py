@@ -67,7 +67,9 @@ def get_score(query, text):
         if not is_word_boundary:
             base_similarity -= 0.5 / query_len
 
-    # Rank matches lower for each extra character, to slightly favor shorter ones.
-    score = 100 * base_similarity * query_len / (query_len + (max_len - query_len) * 0.001)
-
-    return score
+    return (
+        100
+        * base_similarity
+        * query_len
+        / (query_len + (max_len - query_len) * 0.001)
+    )

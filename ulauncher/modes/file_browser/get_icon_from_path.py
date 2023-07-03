@@ -21,11 +21,7 @@ def get_icon_from_path(path):
     if Path(path).is_dir():
         return SPECIAL_DIRS.get(path) or "folder"
 
-    mime = mimetypes.guess_type(Path(path).name)[0]
-    if mime:
+    if mime := mimetypes.guess_type(Path(path).name)[0]:
         return mime.replace("/", "-")
 
-    if os.access(path, os.X_OK):
-        return "application-x-executable"
-
-    return "unknown"
+    return "application-x-executable" if os.access(path, os.X_OK) else "unknown"

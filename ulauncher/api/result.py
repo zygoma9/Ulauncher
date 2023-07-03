@@ -51,9 +51,7 @@ class Result:
         self._on_enter = on_enter
         self._on_alt_enter = on_alt_enter
 
-        # This part only runs when initialized from an extensions
-        ext_path = os.environ.get("EXTENSION_PATH")
-        if ext_path:
+        if ext_path := os.environ.get("EXTENSION_PATH"):
             if not self.icon:
                 self.icon = os.environ.get("EXTENSION_ICON")
             if self.icon and os.path.isfile(f"{ext_path}/{self.icon}"):

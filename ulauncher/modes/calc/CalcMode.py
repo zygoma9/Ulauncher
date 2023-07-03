@@ -76,13 +76,10 @@ def eval_expr(expr):
     tree = ast.parse(expr, mode="eval").body
     result = _eval(tree).quantize(Decimal("1e-15"))
     int_result = int(result)
-    if result == int_result:
-        return int_result
-    return result.normalize()  # Strip trailing zeros from decimal
+    return int_result if result == int_result else result.normalize()
 
 
 @lru_cache(maxsize=1000)
-# pylint: disable=too-many-return-statements
 def _is_enabled(query):
     query = normalize_expr(query)
     try:
@@ -93,9 +90,7 @@ def _is_enabled(query):
             # Check that left and right are valid constants if they are strings
             if isinstance(node.left, ast.Name) and node.left.id not in constants:
                 return False
-            if isinstance(node.right, ast.Name) and node.right.id not in constants:
-                return False
-            return True  # Allow any other variant
+            return not isinstance(node.right, ast.Name) or node.right.id in constants
         if isinstance(node, ast.UnaryOp):
             # Allow for minus, but no other operators
             return isinstance(node.op, ast.USub)

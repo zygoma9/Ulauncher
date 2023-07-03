@@ -140,9 +140,11 @@ class ExtensionRemote:
         want extension devs to use the old way until Ulauncher 5/apiv2 is fully phased out
         """
         remote_refs = self._get_refs()
-        compatible = {ref: sha for ref, sha in remote_refs.items() if satisfies(API_VERSION, ref[4:])}
-
-        if compatible:
+        if compatible := {
+            ref: sha
+            for ref, sha in remote_refs.items()
+            if satisfies(API_VERSION, ref[4:])
+        }:
             return compatible[max(compatible)]
 
         # Try to get the commit ref for head, fallback on "HEAD" as a string as that can be used also

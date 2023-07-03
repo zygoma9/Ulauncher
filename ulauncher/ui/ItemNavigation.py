@@ -24,10 +24,15 @@ class ItemNavigation:
         """
         previous_pick = query_history.get(query)
 
-        for index, widget in enumerate(self.result_widgets):
-            if widget.result.searchable and widget.result.get_name() == previous_pick:
-                return index
-        return 0
+        return next(
+            (
+                index
+                for index, widget in enumerate(self.result_widgets)
+                if widget.result.searchable
+                and widget.result.get_name() == previous_pick
+            ),
+            0,
+        )
 
     def select_default(self, query):
         self.select(self.get_default(query))

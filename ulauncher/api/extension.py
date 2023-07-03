@@ -87,8 +87,7 @@ class Extension:
             threading.Thread(target=self.run_event_listener, args=(event, method, args)).start()
 
     def run_event_listener(self, event, method, args):
-        action = method(*args)
-        if action:
+        if action := method(*args):
             # convert iterables to list unless they are actions (ActionList is both)
             if isinstance(action, Iterator) and not isinstance(action, BaseAction):
                 action = list(action)

@@ -14,11 +14,15 @@ class ShortcutMode(BaseMode):
         return bool(self._get_active_shortcut(query))
 
     def _get_active_shortcut(self, query):
-        for s in self.shortcutsDb.values():
-            if query.startswith(f"{s.keyword} ") or (query == s.keyword and s.run_without_argument):
-                return s
-
-        return None
+        return next(
+            (
+                s
+                for s in self.shortcutsDb.values()
+                if query.startswith(f"{s.keyword} ")
+                or (query == s.keyword and s.run_without_argument)
+            ),
+            None,
+        )
 
     def _create_items(self, shortcuts, default_search=False):
         return [ShortcutResult(default_search=default_search, **s) for s in shortcuts]
@@ -27,11 +31,10 @@ class ShortcutMode(BaseMode):
         """
         @return Action object
         """
-        shortcut = self._get_active_shortcut(query)
-        if not shortcut:
+        if shortcut := self._get_active_shortcut(query):
+            return [ShortcutResult(**shortcut)]
+        else:
             raise RuntimeError("Query doesn't match any shortcut")
-
-        return [ShortcutResult(**shortcut)]
 
     def get_fallback_results(self):
         return self._create_items([s for s in self.shortcutsDb.values() if s["is_default_search"]], default_search=True)

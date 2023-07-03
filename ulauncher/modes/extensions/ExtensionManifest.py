@@ -93,8 +93,7 @@ class ExtensionManifest(JsonData):
         Ensure that the manifest is valid (or raise error)
         """
         required_fields = ["api_version", "authors", "name", "icon", "triggers"]
-        missing_fields = [f for f in required_fields if not self.get(f)]
-        if missing_fields:
+        if missing_fields := [f for f in required_fields if not self.get(f)]:
             err_msg = f'Extension manifest is missing required field(s): "{", ".join(missing_fields)}"'
             raise ExtensionManifestError(err_msg)
 
@@ -134,7 +133,7 @@ class ExtensionManifest(JsonData):
                     assert (
                         not default or not p.min or default >= p.min
                     ), f'"{id}" "min" value must not be higher than "default_value"'
-                if p.type == "select":
+                elif p.type == "select":
                     assert isinstance(p.options, list), f'"{id}" options field must be a list'
                     assert p.options, f'"{id}" option cannot be empty for select type'
         except AssertionError as e:
@@ -145,17 +144,16 @@ class ExtensionManifest(JsonData):
         Ensure the extension is compatible with the Ulauncher API (or raise error)
         """
         if not satisfies(API_VERSION, self.api_version):
-            if satisfies("2.0", self.api_version):
-                # Show a warning for v2 -> v3 instead of aborting. Most v2 extensions run in v3.
-                if verbose:
-                    logger.warning(
-                        "Extension %s has not yet been updated to support API v%s. "
-                        "It might fail to start or not be fully functional.",
-                        self.name,
-                        API_VERSION,
-                    )
-            else:
+            if not satisfies("2.0", self.api_version):
                 raise ExtensionIncompatibleWarning(f"{self.name} does not support Ulauncher API v{API_VERSION}.")
+            # Show a warning for v2 -> v3 instead of aborting. Most v2 extensions run in v3.
+            if verbose:
+                logger.warning(
+                    "Extension %s has not yet been updated to support API v%s. "
+                    "It might fail to start or not be fully functional.",
+                    self.name,
+                    API_VERSION,
+                )
 
     def find_matching_trigger(self, **kwargs) -> Optional[str]:
         """

@@ -64,7 +64,7 @@ class ExtensionDownloader:
         return has_update, commit_hash
 
     def _find_extension(self, ext_id: str) -> ExtensionRecord:
-        ext = self.ext_db.get(ext_id)
-        if not ext:
+        if ext := self.ext_db.get(ext_id):
+            return ext
+        else:
             raise ExtensionDownloaderError("Extension not found")
-        return ext

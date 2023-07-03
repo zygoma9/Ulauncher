@@ -33,8 +33,7 @@ def launch_app(app_id):
         exec = ["gapplication", "launch", app_id.replace(".desktop", "")]
     elif app_exec:
         if app.get_boolean("Terminal"):
-            terminal_exec = settings.terminal_command
-            if terminal_exec:
+            if terminal_exec := settings.terminal_command:
                 logger.info("Will run command in preferred terminal (%s)", terminal_exec)
                 exec = shlex.split(terminal_exec) + [app_exec]
             else:

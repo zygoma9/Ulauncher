@@ -15,10 +15,7 @@ class ActionList(list, BaseAction):
         :returns: return true if there are no actions in the list
                   otherwise returns ``any(map(lambda i: i.keep_app_open, self))``
         """
-        if not self:
-            return True
-
-        return any(map(lambda i: i.keep_app_open, self))
+        return True if not self else any(map(lambda i: i.keep_app_open, self))
 
     def run(self):
         for item in self:

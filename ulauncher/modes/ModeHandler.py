@@ -28,8 +28,7 @@ class ModeHandler:
         for mode in self.modes:
             mode.on_query_change(query)
 
-        mode = self.get_mode_from_query(query)
-        if mode:
+        if mode := self.get_mode_from_query(query):
             action = mode.handle_query(query)
             if not isinstance(action, BaseAction):
                 action = RenderResultListAction(action)
@@ -44,16 +43,11 @@ class ModeHandler:
             RenderResultListAction(results).run()
 
     def on_key_press_event(self, widget, event, query):
-        # This is used for FileBrowserMode to make backspace delete the entire "word"
-        mode = self.get_mode_from_query(query)
-        if mode:
+        if mode := self.get_mode_from_query(query):
             mode.handle_key_press_event(widget, event, query).run()
 
     def get_mode_from_query(self, query):
-        for mode in self.modes:
-            if mode.is_enabled(query):
-                return mode
-        return None
+        return next((mode for mode in self.modes if mode.is_enabled(query)), None)
 
     def search(self, query, min_score=50, limit=50):
         searchables = []

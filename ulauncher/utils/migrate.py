@@ -38,8 +38,7 @@ def _storeJSON(path, data):
 
 def _migrate_file(from_path, to_path, transform=None, overwrite=False):
     if os.path.isfile(from_path) and (overwrite or not os.path.exists(to_path)):
-        data = _load_legacy(Path(from_path))
-        if data:
+        if data := _load_legacy(Path(from_path)):
             _logger.info("Migrating %s to %s", from_path, to_path)
             if callable(transform):
                 data = transform(data)
@@ -47,11 +46,10 @@ def _migrate_file(from_path, to_path, transform=None, overwrite=False):
 
 
 def _migrate_app_state(old_format):
-    new_format = {}
-    for app_path, starts in old_format.items():
-        # Was changed to use app ids instead of paths as keys
-        new_format[os.path.basename(app_path)] = starts
-    return new_format
+    return {
+        os.path.basename(app_path): starts
+        for app_path, starts in old_format.items()
+    }
 
 
 def _migrate_user_prefs(extension_id, user_prefs):
@@ -118,17 +116,12 @@ def v5_to_v6():
 
 
 def v5_to_v6_destructive():
-    # Currently optional changes that breaks your conf if you want to revert back to v5 for some reason
-    # We probably want to run these later as part of the v7 migration instead.
-
-    # Delete old unused files
-    cleanup_list = [
+    if cleanup_list := [
         *Path(PATHS.CONFIG).parent.rglob("autostart/ulauncher.desktop"),
         *Path(CACHE_PATH).rglob("*.db"),
         *Path(PATHS.DATA).rglob("*.db"),
         *Path(PATHS.DATA).rglob("last.log"),
-    ]
-    if cleanup_list:
+    ]:
         print("Removing deprecated data files:")
         print("\n".join(map(str, cleanup_list)))
         for file in cleanup_list:

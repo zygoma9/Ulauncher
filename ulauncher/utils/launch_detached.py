@@ -20,7 +20,7 @@ def launch_detached(cmd):
     if use_systemd_run:
         cmd = ["systemd-run", "--user", "--scope"] + cmd
 
-    env = dict(os.environ.items())
+    env = dict(os.environ)
     # Make sure GDK apps aren't forced to use x11 on wayland due to ulauncher's need to run
     # under X11 for proper centering.
     env.pop("GDK_BACKEND", None)

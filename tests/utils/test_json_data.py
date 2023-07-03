@@ -26,7 +26,7 @@ class TestJsonData:
             jd.a
         jd.a = False
         assert hasattr(jd, "a")
-        assert jd.a is False
+        assert not jd.a
 
     def test_setting_and_comparison(self):
         jd = JsonData()
@@ -124,9 +124,13 @@ class TestJsonData:
         assert inst.subdict.get("k") == "v"
 
     def test_setitem_always_used(self):
+
+
+
         class UnderscorePrefix(JsonData):
             def __setitem__(self, key, value):
-                super().__setitem__("_" + key, value)
+                super().__setitem__(f"_{key}", value)
+
 
         data = UnderscorePrefix({"one": 1})
         data.update(({"two": 2}))

@@ -30,7 +30,9 @@ class RunScriptAction(BaseAction):
         try:
             os.chmod(file_path, 0o777)
             logger.debug("Running a script from %s", file_path)
-            output = subprocess.check_output([file_path + " " + shlex.quote(self.arg)], shell=True).decode("utf-8")
+            output = subprocess.check_output(
+                [f"{file_path} {shlex.quote(self.arg)}"], shell=True
+            ).decode("utf-8")
             logger.debug("Script action output:\n%s", output)
             self.remove_temp_file(file_path)
         except Exception:

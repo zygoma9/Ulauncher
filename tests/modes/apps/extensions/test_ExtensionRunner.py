@@ -8,8 +8,7 @@ from ulauncher.modes.extensions.ExtensionRunner import ExtensionRunner, Extensio
 class TestExtensionRunner:
     @pytest.fixture
     def runner(self):
-        thisrunner = ExtensionRunner()
-        return thisrunner
+        return ExtensionRunner()
 
     @pytest.fixture(autouse=True)
     def find_extensions(self, mocker):

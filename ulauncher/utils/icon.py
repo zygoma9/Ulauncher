@@ -25,8 +25,9 @@ def get_icon_path(icon, size=32, base_path=""):
             if "/" in icon or mimetypes.guess_type(icon)[0]:
                 return join(base_path, icon)
 
-            themed_icon = icon_theme.lookup_icon(icon, size, Gtk.IconLookupFlags.FORCE_SIZE)
-            if themed_icon:
+            if themed_icon := icon_theme.lookup_icon(
+                icon, size, Gtk.IconLookupFlags.FORCE_SIZE
+            ):
                 return themed_icon.get_filename()
 
     except Exception as e:

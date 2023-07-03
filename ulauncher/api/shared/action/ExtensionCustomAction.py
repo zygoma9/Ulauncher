@@ -31,6 +31,5 @@ class ExtensionCustomAction(BaseAction):
             from ulauncher.modes.extensions.DeferredResultRenderer import DeferredResultRenderer
 
             renderer = DeferredResultRenderer.get_instance()
-            controller = renderer.get_active_controller()
-            if controller:
+            if controller := renderer.get_active_controller():
                 controller.trigger_event(ItemEnterEvent(self.ref))

@@ -57,8 +57,7 @@ class ExtensionServer:
 
     def handle_registration(self, framer, event):
         if isinstance(event, RegisterEvent):
-            pended = self.pending.pop(id(framer))
-            if pended:
+            if pended := self.pending.pop(id(framer)):
                 for msg_id in pended[1:]:
                     GObject.signal_handler_disconnect(framer, msg_id)
             ExtensionController(self.controllers, framer, event.extension_id)

@@ -222,9 +222,7 @@ class UlauncherWindow(Gtk.ApplicationWindow, LayerShellOverlay):
             self._css_provider = Gtk.CssProvider()
         self._css_provider.load_from_data(Theme.load(self.settings.theme_name).get_css().encode())
         self.apply_css(self)
-        # pylint: disable=no-member
-        visual = self.get_screen().get_rgba_visual()
-        if visual:
+        if visual := self.get_screen().get_rgba_visual():
             self.set_visual(visual)
 
     def position_window(self):

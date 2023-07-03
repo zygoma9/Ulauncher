@@ -109,8 +109,7 @@ class JsonData(dict):
 
     def save_as(self, path) -> bool:
         """Save self to file path"""
-        file_path = Path(path).resolve()
-        if file_path:
+        if file_path := Path(path).resolve():
             try:
                 # Ensure parent dir first
                 file_path.parent.mkdir(parents=True, exist_ok=True)
